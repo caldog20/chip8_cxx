@@ -7,9 +7,8 @@
 #include <string>
 #include <cstring>
 
-
 class Cpu {
-public:
+  public:
     Byte v[16];
     Word i, pc;
     Byte sp;
@@ -21,17 +20,16 @@ public:
     Word counter;
     int display[64 * 32];
 
-
     Cpu();
 
     bool loadRom(std::string);
-    void loadFonts();
-
-    // Word fetchOpcode();
     void executeOpcode(bool);
 
     ~Cpu();
-};
 
+  private:
+    void loadFonts();
+    Word fetchOpcode(Word);
+};
 
 #endif

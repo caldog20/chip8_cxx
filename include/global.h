@@ -6,12 +6,11 @@
 #include <stdint.h>
 #include <iostream>
 
-namespace globals
-{
-    const int SCREEN_WIDTH = 640;
-    const int SCREEN_HEIGHT = 320;
-    const int SCREEN_SCALE = 2;
-}
+namespace globals {
+
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 320;
+} // namespace globals
 
 using Byte = uint8_t;
 using Word = uint16_t;
