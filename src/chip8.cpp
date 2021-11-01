@@ -6,8 +6,8 @@
 
 using namespace std;
 
-Cpu::Cpu()
-{
+Cpu::Cpu() {
+    // Constructor for CPU = Default Settings
     pc = 0x200;
     i = 0;
     sp = 0;
@@ -16,7 +16,7 @@ Cpu::Cpu()
     draw = false;
     counter = 10;
 
-    // Zero out registers, stack, and ram
+    // Zero out registers, stack, and ram on construction
     memset(v, 0, sizeof(v));
     memset(stack, 0, sizeof(stack));
     memset(ram, 0, sizeof(ram));
@@ -41,8 +41,6 @@ bool Cpu::loadRom(std::string path) {
         ram[i] = (Byte) c;
         j++;
     }
-    std::cout << "ROM Loaded sucessfully" << std::endl;
-    // cout << "RAM SIZE" << sizeof(ram) << endl;
     return true;
 }
 
@@ -92,22 +90,16 @@ void Cpu::executeOpcode(bool debug) {
         ny = lower 4 bits of low byte
         n = lower 4 bits if instruction
         */
+
     Word opcode = (ram[pc] << 8) | (ram[pc + 1]);
-    // cout << "" << endl;
-    // printf("OPCODE: %.4X\n", opcode);
 
     if (debug)
     {
-        printf("%.4X %.4X %.2X ", pc, opcode, sp);
-        for (int i = 0; i < 15; i++)
-        {
-            printf("%.2X ", v[i]);
+        printf("pc: %.4X opcode: %.4X sp: %.2X ", pc, opcode, sp);
+        for (int i = 0; i < 15; i++) {
+            printf("v[$d]:%.2X ", v[i]);
         }
-        printf("\n");
-        printf("SCORE1: %.2X", v[2]);
-        printf("\n");
     }
-
 
     Word ms_byte = (opcode & 0xF000) >> 12;
 
@@ -119,14 +111,7 @@ void Cpu::executeOpcode(bool debug) {
     Byte nx = nibbles[1];
     Byte ny = nibbles[2];
     Byte n = nibbles[3];
-    // Byte vx, vy;
-    // Byte xx, xy;
-    // Byte sum;
-    // printf("MS: %.4X\n", ms_byte);
-    // printf("NNN: %.4X\n", nnn);
-    // printf("kk: %.4X\n", kk);
-    // cout << "kk: " << kk << endl;
-    // cout << "MS: " << ms_byte << endl;
+
     switch(ms_byte) {
         // 0x0 Sub instructions
         case 0x0:
@@ -152,7 +137,7 @@ void Cpu::executeOpcode(bool debug) {
         // JUMP ADDR
         case 1:
             // std::cout << "JUMP ADDR" << endl;
-            pc = opcode & 0x0FFF;
+            pc = nnn;
             break;
         
         // CALL ADDR
@@ -160,7 +145,7 @@ void Cpu::executeOpcode(bool debug) {
             // cout << "CALL ADDR" << endl;
             stack[sp] = pc;
             sp++;
-            pc = opcode & 0x0FFF;
+            pc = nnn;
             break;
 
         // SKIP E VX KK
@@ -309,13 +294,13 @@ void Cpu::executeOpcode(bool debug) {
         // LOAD I ADDR
         case 0xA:
             // cout << "LOAD I ADDR" << endl;
-            i = opcode & 0x0FFF;
+            i = nnn;
             pc += 2;
             break;
         // JUMP V0 ADDR
         case 0xB:
             // cout << "JUMP V0 ADDR" << endl;
-            pc = (opcode & 0x0FFF);
+            pc = nnn;
             pc += v[0];
             break;
         // RAN VX KK
